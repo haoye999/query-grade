@@ -1,0 +1,17 @@
+.tips {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 10px;
+  height: 30px;
+  line-height: 30px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, .3);
+  border-radius: 15px;
+  transition: transform .5s;
+}
+
+.tips-disabled {
+  transform: translate(-50%, calc(-50% - 100px));
+}
