@@ -38,9 +38,15 @@ class Login extends React.Component {
     getToken(this.state.xh, this.state.pwd)
       .then(data => {
         msg = data.msg;
-        if (data.flag) {
+        console.log(data);
+        if (data.flag === '1') {
           localStorage.setItem('token', data.token);
           this.props.history.push('/query');
+        } else {
+          this.setState({
+            xh: '',
+            pwd: ''
+          });
         }
       })
       .finally(() => this.props.setTips(msg));
