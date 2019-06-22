@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import GradeTable from 'components/grade-table/grade-table';
 import './query.less';
 
@@ -13,7 +13,6 @@ class Query extends React.Component {
     super(props);
     this.state = {
       xh: '',
-      token: localStorage.getItem('token'),
       grade: [],
       info: {}
     };
@@ -29,7 +28,8 @@ class Query extends React.Component {
   }
 
   handleSearch() {
-    const { xh, token } = this.state;
+    const { xh } = this.state;
+    const token = localStorage.token;
 
     getGrade(xh, token).then(data => {
       if (data.token === '-1') {
@@ -38,6 +38,7 @@ class Query extends React.Component {
           token: '-1'
         });
         this.props.setTips('请先登录');
+        this.props.history.push('/login');
         return;
       }
 
@@ -74,33 +75,41 @@ class Query extends React.Component {
     // 总学分
     info.zxf = grade.reduce((pre, cur) => pre + cur.xf, 0);
     // 必修学分
-    info.bxxf = grade.reduce((pre, cur) => pre + (cur.kclbmc === '必修' ? cur.xf : 0), 0);
+    info.bxxf = grade.reduce(
+      (pre, cur) => pre + (cur.kclbmc === '必修' ? cur.xf : 0),
+      0
+    );
     // 选修学分
-    info.xxxf = grade.reduce((pre, cur) => pre + (cur.kclbmc === '选修' ? cur.xf : 0), 0);
+    info.xxxf = grade.reduce(
+      (pre, cur) => pre + (cur.kclbmc === '选修' ? cur.xf : 0),
+      0
+    );
     // 加权平均
-    info.jqpj = (grade.reduce((pre, cur) => {
-      let grade = cur.zcj;
-      switch (grade) {
-        case '通过':
-          grade = 0;
-          info.zxf -= 1;
-          info.xxxf -= 1;
-          break;
-        case '优':
-          grade = 95;
-          break;
-        case '良':
-          grade = 85;
-          break;
-        case '中':
-          grade = 75;
-          break;
-        default:
-          break;
-      }
+    info.jqpj = (
+      grade.reduce((pre, cur) => {
+        let grade = cur.zcj;
+        switch (grade) {
+          case '通过':
+            grade = 0;
+            info.zxf -= 1;
+            info.xxxf -= 1;
+            break;
+          case '优':
+            grade = 95;
+            break;
+          case '良':
+            grade = 85;
+            break;
+          case '中':
+            grade = 75;
+            break;
+          default:
+            break;
+        }
 
-      return pre + +grade * +cur.xf;
-    }, 0) / info.zxf).toFixed(2);
+        return pre + +grade * +cur.xf;
+      }, 0) / info.zxf
+    ).toFixed(2);
 
     this.setState({
       info
@@ -108,47 +117,45 @@ class Query extends React.Component {
   }
 
   render() {
-    const { token, info, grade } = this.state;
+    const { info, grade } = this.state;
 
     return (
       <Route
         path={['/query', '/']}
         exact
-        render={() =>
-          token !== '-1' ? (
-            <div className="query">
-              <div className="xh-container">
-                <input
-                  type="text"
-                  value={this.state.xh}
-                  onChange={this.handleXhChange}
-                  onKeyPress={this.handleEnter}
-                  placeholder="请输入待查询学号"
-                />
-                <button className="search" onClick={this.handleSearch}>
-                  <i className="iconfont icon-search" />
-                </button>
-              </div>
-              <div className="info-container">
-                {grade.length ? (
-                  <div className="info">
-                    <span>姓名：{info.name}</span>
-                    <span>总学分：{info.zxf}</span>
-                    <span>必修学分：{info.bxxf}</span>
-                    <span>选修学分：{info.xxxf}</span>
-                    <span>加权平均分：{info.jqpj}</span>
-                  </div>
-                ) : ''}
-              </div>
-              <GradeTable data={grade} />
+        render={() => (
+          <div className="query">
+            <div className="xh-container">
+              <input
+                type="text"
+                value={this.state.xh}
+                onChange={this.handleXhChange}
+                onKeyPress={this.handleEnter}
+                placeholder="请输入待查询学号"
+              />
+              <button className="search" onClick={this.handleSearch}>
+                <i className="iconfont icon-search" />
+              </button>
             </div>
-          ) : (
-            <Redirect to="/login" />
-          )
-        }
+            <div className="info-container">
+              {grade.length ? (
+                <div className="info">
+                  <span>姓名：{info.name}</span>
+                  <span>总学分：{info.zxf}</span>
+                  <span>必修学分：{info.bxxf}</span>
+                  <span>选修学分：{info.xxxf}</span>
+                  <span>加权平均分：{info.jqpj}</span>
+                </div>
+              ) : (
+                ''
+              )}
+            </div>
+            <GradeTable data={grade} />
+          </div>
+        )}
       />
     );
   }
 }
 
-export default Query;
+export default withRouter(Query);

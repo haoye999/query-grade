@@ -1,11 +1,11 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import './login.less';
 
 import { getToken } from 'api/token';
 
 /**
- * props: 
+ * props:
  *  title
  *  setTips
  */
@@ -15,8 +15,7 @@ class Login extends React.Component {
     this.state = {
       xh: '',
       pwd: '',
-      msg: '',
-      redirect: false
+      msg: ''
     };
     this.submitHandle = this.submitHandle.bind(this);
     this.handleXhChange = this.handleXhChange.bind(this);
@@ -41,19 +40,13 @@ class Login extends React.Component {
         msg = data.msg;
         if (data.flag) {
           localStorage.setItem('token', data.token);
-          this.setState({
-            redirect: true
-          });
+          this.props.history.push('/query');
         }
       })
       .finally(() => this.props.setTips(msg));
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to="/query" />
-    }
-
     return (
       <Route
         path="/login"
@@ -90,4 +83,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
