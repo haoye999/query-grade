@@ -94,6 +94,10 @@ class Query extends React.Component {
             info.zxf -= 1;
             info.xxxf -= 1;
             break;
+          case '免考':
+          case '及格':
+            grade = 60;
+            break;
           case '优':
             grade = 95;
             break;
