@@ -1,68 +1,47 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 成绩查询系统
 
-## Available Scripts
+登录自己的教务系统账号，查 **任何** 人的成绩。
 
-In the project directory, you can run:
 
-### `npm start`
+> 现仅支持中南大学，理论上其他使用了强智科技开发的教务系统的的学校都可用。 只需修改 grade.js 和 scripts/serve.js 中 getToken、getGrade 两个函数的 url 即可。
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> 基于强智科技教务系统系统漏洞。 如有不爽/侵权/违规，立马删除（haoye999han@gmail.com）！！
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## feature
 
-### `npm test`
+只要知道学号
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 查任何人的成绩！！！
 
-### `npm run build`
+- 查任何人的成绩！！！
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 查任何人的成绩！！！
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Installing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+git clone git@github.com:haoye999/query-grade.git
+cd query-grade
+npm i
+```
 
-### `npm run eject`
+## Usage
+本地使用
+```
+npm run start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+构建静态文件
+```
+npm run build
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+使用静态文件 / 部署到服务器
+```
+node grade.js
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+部署时（以pm2为例）
+```
+pm2 start grade.js --watch
+```
