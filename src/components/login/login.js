@@ -1,92 +1,66 @@
-import React from 'react';
-import { Route, withRouter } from 'react-router-dom';
-import './login.less';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 
+import message from 'components/message';
 import { getToken } from 'api/token';
 
-/**
- * props:
- *  title
- *  setTips
- */
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      xh: '',
-      pwd: '',
-      msg: ''
-    };
-    this.submitHandle = this.submitHandle.bind(this);
-    this.handleXhChange = this.handleXhChange.bind(this);
-    this.handlePwdChange = this.handlePwdChange.bind(this);
+import './login.less';
+
+function Login(props) {
+  const [xh, setXh] = useState('');
+  const [pwd, setPwd] = useState('');
+  const title = '请使用中南大学教务管理系统账号与密码登录';
+
+  function handleXhChange(e) {
+    setXh(e.target.value);
   }
 
-  handleXhChange(e) {
-    this.setState({ xh: e.target.value });
+  function handlePwdChange(e) {
+    setPwd(e.target.value);
   }
 
-  handlePwdChange(e) {
-    this.setState({ pwd: e.target.value });
-  }
-
-  submitHandle(e) {
+  function submitHandle(e) {
     e.preventDefault();
-
-    let msg = '';
-
-    getToken(this.state.xh, this.state.pwd)
+    getToken(xh, pwd)
       .then(data => {
-        msg = data.msg;
-        console.log(data);
         if (data.flag === '1') {
           localStorage.setItem('token', data.token);
-          this.props.history.push('/query');
+          props.history.push('/query');
         } else {
-          this.setState({
-            xh: '',
-            pwd: ''
-          });
+          setXh('');
+          setPwd('');
         }
+        message.success(data.msg);
       })
-      .finally(() => this.props.setTips(msg));
+      .catch((ex) => message.error(ex.message));
   }
 
-  render() {
-    return (
-      <Route
-        path="/login"
-        render={() => (
-          <div className="login">
-            <h1 className="title">
-              {this.props.title || '请使用中南大学教务管理系统账号与密码登录'}
-            </h1>
-            <form className="login-form" onSubmit={this.submitHandle}>
-              <div className="field">
-                <input
-                  type="text"
-                  name="xh"
-                  placeholder="学号"
-                  value={this.state.xh}
-                  onChange={this.handleXhChange}
-                />
-              </div>
-              <div className="field">
-                <input
-                  type="password"
-                  name="pwd"
-                  placeholder="密码"
-                  value={this.state.pwd}
-                  onChange={this.handlePwdChange}
-                />
-              </div>
-              <button className="login-button">登录</button>
-            </form>
-          </div>
-        )}
-      />
-    );
-  }
+  return (
+    <div className='login'>
+      <h1 className='title'>{title}</h1>
+      <form className='login-form' onSubmit={submitHandle}>
+        <div className='field'>
+          <input
+            type='text'
+            name='xh'
+            placeholder='学号'
+            value={xh}
+            onChange={handleXhChange}
+          />
+        </div>
+        <div className='field'>
+          <input
+            type='password'
+            name='pwd'
+            placeholder='密码'
+            value={pwd}
+            onChange={handlePwdChange}
+          />
+        </div>
+        <button className='login-button'>登录</button>
+      </form>
+    </div>
+  );
 }
 
 export default withRouter(Login);

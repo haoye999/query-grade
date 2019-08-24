@@ -8,42 +8,17 @@ import About from 'components/about/about';
 import MyHeader from 'components/my-header/my-header';
 import Tips from 'components/tips/tips';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      tips: ''
-    }
-    this.setTips = this.setTips.bind(this);
-  }
-
-  setTips(tips, timeout=3000) {
-    this.setState({
-      tips
-    });
-    
-    setTimeout(() => {
-      this.setState({
-        tips: ''
-      })
-    }, timeout);
-  }
-
-  render() {
-    const { tips } = this.state;
-
-    return (
-      <Router>
-        <div className="App">
-          <MyHeader />
-          <Tips tips={tips} />
-          <Login setTips={this.setTips} />
-          <Query setTips={this.setTips} />
-          <Route path="/about" component={About} />
-        </div>
-      </Router>
-    );
-  }
+function App() {
+  return (
+    <Router>
+      <div className='App'>
+        <MyHeader />
+        <Route path={'/login'} component={Login} />
+        <Route path={['/query', '/']} exact component={Query} />
+        <Route path={'/about'} component={About} />
+      </div>
+    </Router>
+  );
 }
 
 export default App;
